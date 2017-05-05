@@ -1,6 +1,22 @@
 {
   "doves": [
     {
+      "id": "00",
+      "active": false,
+      "color": "#00FF55",
+      "images_collected": 9001,
+      "last_command": "fly!",
+      "deorbit_dt": "2016-01-04T12:44:03Z"
+    },
+    {
+      "id": "0A",
+      "active": false,
+      "color": "#FF7F50",
+      "images_collected": 101,
+      "last_command": "Flim Flam the Whammy Jammers",
+      "deorbit_dt": "2016-11-04T12:22:03Z"
+    },
+    {
       "id": "0X",
       "active": true,
       "color": "#8B0000",
@@ -207,46 +223,6 @@
       "images_collected": 8590,
       "last_command": "Engage thrusters",
       "deorbit_dt": "2011-01-20T12:44:03Z"
-    },
-    {
-      "active": false,
-      "color": "#000000",
-      "images_collected": 6,
-      "last_command": "first add",
-      "deorbit_dt": "2017-05-03T15:50:11Z",
-      "id": "S1wi14Y1b"
-    },
-    {
-      "active": false,
-      "color": "#000000",
-      "images_collected": 0,
-      "last_command": "second add",
-      "deorbit_dt": "2017-05-03T17:35:21Z",
-      "id": "rk8iOrFk-"
-    },
-    {
-      "active": false,
-      "color": "#000000",
-      "images_collected": 0,
-      "last_command": "second.1 add",
-      "deorbit_dt": "2017-05-03T17:37:22Z",
-      "id": "S1gOYrK1W"
-    },
-    {
-      "active": false,
-      "color": "#000000",
-      "images_collected": 0,
-      "last_command": "second.2 add",
-      "deorbit_dt": "2017-05-03T17:45:08Z",
-      "id": "rkPWiSFkW"
-    },
-    {
-      "active": false,
-      "color": "#000000",
-      "images_collected": 7,
-      "last_command": "second.3 add",
-      "deorbit_dt": "2017-05-03T17:52:47Z",
-      "id": "BJpj3HYy-"
     }
   ]
 }

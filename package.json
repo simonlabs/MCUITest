@@ -5,11 +5,20 @@
   "main": "./lib/server/index.js",
   "bin": "./bin/index.js",
   "dependencies": {
-      "json-server": "^0.9.4"
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "json-server": "^0.9.4",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "scripts": {
-    "start": "json-server --watch db.json",
+    "start": ".\\node_modules\\.bin\\json-server --watch db.json",
     "build": "babel src -d lib --copy-files",
     "toc": "markdown-toc -i README.md"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "webpack": "^2.4.1"
   }
 }
