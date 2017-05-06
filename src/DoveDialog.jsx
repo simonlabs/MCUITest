@@ -19,6 +19,7 @@ class DoveDialog extends React.Component {
         this.state = {
             show: this.props.show === true ? true : false,
             mode: this.props.mode ? this.props.mode : "add",   // "add", "change", or "na"
+            ccColor: { backgroundColor: "none" },
             details: this.props.detail ? this.props.detail : Object.assign({}, this.defaultDetails)
         };
         this.onChange = this.onChange.bind(this);
@@ -32,15 +33,32 @@ class DoveDialog extends React.Component {
      * Upon receiving props change, set the state according to the mode.
      */
     componentWillReceiveProps(newProps) {
+        let color = "none";
         switch (newProps.mode) {
             case "add":
-                this.setState({ show: true, mode: "add", details: Object.assign({}, this.defaultDetails) });
+                this.setState({
+                    show: true,
+                    mode: "add",
+                    ccColor: { backgroundColor: color },
+                    details: Object.assign({}, this.defaultDetails)
+                });
                 break;
             case "change":
-                this.setState({ show: true, mode: "change", details: Object.assign({}, newProps.details) });
+                color = newProps.details.color;
+                this.setState({
+                    show: true,
+                    mode: "change",
+                    ccColor: { backgroundColor: this.isValidColor(color) ? color : "none" },
+                    details: Object.assign({}, newProps.details)
+                });
                 break;
             default:
-                this.setState({ show: false, mode: "na", details: Object.assign({}, this.defaultDetails) });
+                this.setState({
+                    show: false,
+                    mode: "na",
+                    ccColor: { backgroundColor: color },
+                    details: Object.assign({}, this.defaultDetails)
+                });
                 break;
         }
     }
@@ -53,7 +71,15 @@ class DoveDialog extends React.Component {
     onChange(ev) {
         let details = this.state.details;
         details[ev.target.name] = ev.target.value;
-        this.setState({ show: this.state.show, mode: this.state.mode, details: details });
+        if (this.isValidColor(ev.target.value)) {
+            this.state.ccColor = { backgroundColor: ev.target.value };
+        }
+        this.setState({
+            show: this.state.show,
+            mode: this.state.mode,
+            ccColor: this.state.ccColor,
+            details: details
+        });
     }
 
     /**
@@ -118,13 +144,22 @@ class DoveDialog extends React.Component {
         let details = this.state.details;
         if ((details.active === "true" || details.active === "false" ||
              details.active === true || details.active === false) &&
-            details.color.length == 7 && /^#[0-9a-f]{6}$/i.test(details.color) &&
+            this.isValidColor(details.color) &&
             ((Number.isInteger(details.images_collected) && details.images_collected >= 0) ||
              details.images_collected == "0" || /^[1-9][0-9]*$/g.test(details.images_collected)) &&
             /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$/.test(details.deorbit_dt)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * It checks whether or not colorHex is a color representation in hex, which has a format of
+     * "#xxxxxx" where x is a hex value between 0-9, or a-f, or A-F.  Only six hex value is accepted.
+     * It returns a boolean of the validation result.
+     */
+    isValidColor(colorHex) {
+        return colorHex && colorHex.length == 7 && /^#[0-9a-fA-F]{6}$/i.test(colorHex);
     }
 
     /**
@@ -171,7 +206,7 @@ class DoveDialog extends React.Component {
                     </div>
                     <div className="dia-row">
                         <div className="dia-col-1">
-                            <label>color:</label>
+                            <label>color:<div className="color-coating" style={this.state.ccColor}></div></label>
                         </div>
                         <div className="dia-col-2">
                             <input type="text" tabIndex="2" name="color"

@@ -37,13 +37,14 @@ class DoveDetails extends React.Component {
      */
     render() {
         let details = this.state.details;
+        let ccColor = { backgroundColor: this.state.details.color };
         return (<div className="row dove-row" onClick={this.onClick}>
             <div className="col-sm-1">id: {details.id}</div>
             <div className="col-sm-1">active: {String(details.active)}</div>
-            <div className="col-sm-1">color: {details.color}</div>
+            <div className="col-sm-1">color:<div className="color-coating" style={ccColor}></div> {details.color}</div>
             <div className="col-sm-1">images: {details.images_collected}</div>
-            <div className="col-sm-4">last command: {details.last_command}</div>
-            <div className="col-sm-4">deorbit date-time: {(new Date(details.deorbit_dt)).toUTCString()}</div>
+            <div className="col-sm-4">last_command: {details.last_command}</div>
+            <div className="col-sm-4">deorbit_dt: {details.deorbit_dt}</div>
         </div>);
     }
 }

@@ -6700,7 +6700,7 @@ function getDoves(param) {
     var url = "/doves";
     var filter = param.filter ? param.filter.trim() : null;
     if (filter && filter.length > 0) {
-        url = url + "?" + filter;
+        url = url + "?" + filter.replace(/#/g, "%23");
     }
     $.ajax({
         url: url,
@@ -9706,6 +9706,7 @@ var DoveDialog = function (_React$Component) {
         _this.state = {
             show: _this.props.show === true ? true : false,
             mode: _this.props.mode ? _this.props.mode : "add", // "add", "change", or "na"
+            ccColor: { backgroundColor: "none" },
             details: _this.props.detail ? _this.props.detail : Object.assign({}, _this.defaultDetails)
         };
         _this.onChange = _this.onChange.bind(_this);
@@ -9724,15 +9725,32 @@ var DoveDialog = function (_React$Component) {
     _createClass(DoveDialog, [{
         key: "componentWillReceiveProps",
         value: function componentWillReceiveProps(newProps) {
+            var color = "none";
             switch (newProps.mode) {
                 case "add":
-                    this.setState({ show: true, mode: "add", details: Object.assign({}, this.defaultDetails) });
+                    this.setState({
+                        show: true,
+                        mode: "add",
+                        ccColor: { backgroundColor: color },
+                        details: Object.assign({}, this.defaultDetails)
+                    });
                     break;
                 case "change":
-                    this.setState({ show: true, mode: "change", details: Object.assign({}, newProps.details) });
+                    color = newProps.details.color;
+                    this.setState({
+                        show: true,
+                        mode: "change",
+                        ccColor: { backgroundColor: this.isValidColor(color) ? color : "none" },
+                        details: Object.assign({}, newProps.details)
+                    });
                     break;
                 default:
-                    this.setState({ show: false, mode: "na", details: Object.assign({}, this.defaultDetails) });
+                    this.setState({
+                        show: false,
+                        mode: "na",
+                        ccColor: { backgroundColor: color },
+                        details: Object.assign({}, this.defaultDetails)
+                    });
                     break;
             }
         }
@@ -9748,7 +9766,15 @@ var DoveDialog = function (_React$Component) {
         value: function onChange(ev) {
             var details = this.state.details;
             details[ev.target.name] = ev.target.value;
-            this.setState({ show: this.state.show, mode: this.state.mode, details: details });
+            if (this.isValidColor(ev.target.value)) {
+                this.state.ccColor = { backgroundColor: ev.target.value };
+            }
+            this.setState({
+                show: this.state.show,
+                mode: this.state.mode,
+                ccColor: this.state.ccColor,
+                details: details
+            });
         }
 
         /**
@@ -9832,10 +9858,22 @@ var DoveDialog = function (_React$Component) {
         key: "isValid",
         value: function isValid() {
             var details = this.state.details;
-            if ((details.active === "true" || details.active === "false" || details.active === true || details.active === false) && details.color.length == 7 && /^#[0-9a-f]{6}$/i.test(details.color) && (Number.isInteger(details.images_collected) && details.images_collected >= 0 || details.images_collected == "0" || /^[1-9][0-9]*$/g.test(details.images_collected)) && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$/.test(details.deorbit_dt)) {
+            if ((details.active === "true" || details.active === "false" || details.active === true || details.active === false) && this.isValidColor(details.color) && (Number.isInteger(details.images_collected) && details.images_collected >= 0 || details.images_collected == "0" || /^[1-9][0-9]*$/g.test(details.images_collected)) && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})Z$/.test(details.deorbit_dt)) {
                 return true;
             }
             return false;
+        }
+
+        /**
+         * It checks whether or not colorHex is a color representation in hex, which has a format of
+         * "#xxxxxx" where x is a hex value between 0-9, or a-f, or A-F.  Only six hex value is accepted.
+         * It returns a boolean of the validation result.
+         */
+
+    }, {
+        key: "isValidColor",
+        value: function isValidColor(colorHex) {
+            return colorHex && colorHex.length == 7 && /^#[0-9a-fA-F]{6}$/i.test(colorHex);
         }
 
         /**
@@ -9913,7 +9951,8 @@ var DoveDialog = function (_React$Component) {
                             _react2.default.createElement(
                                 "label",
                                 null,
-                                "color:"
+                                "color:",
+                                _react2.default.createElement("div", { className: "color-coating", style: this.state.ccColor })
                             )
                         ),
                         _react2.default.createElement(
@@ -10425,6 +10464,7 @@ var DoveDetails = function (_React$Component) {
         key: "render",
         value: function render() {
             var details = this.state.details;
+            var ccColor = { backgroundColor: this.state.details.color };
             return _react2.default.createElement(
                 "div",
                 { className: "row dove-row", onClick: this.onClick },
@@ -10443,7 +10483,9 @@ var DoveDetails = function (_React$Component) {
                 _react2.default.createElement(
                     "div",
                     { className: "col-sm-1" },
-                    "color: ",
+                    "color:",
+                    _react2.default.createElement("div", { className: "color-coating", style: ccColor }),
+                    " ",
                     details.color
                 ),
                 _react2.default.createElement(
@@ -10455,14 +10497,14 @@ var DoveDetails = function (_React$Component) {
                 _react2.default.createElement(
                     "div",
                     { className: "col-sm-4" },
-                    "last command: ",
+                    "last_command: ",
                     details.last_command
                 ),
                 _react2.default.createElement(
                     "div",
                     { className: "col-sm-4" },
-                    "deorbit date-time: ",
-                    new Date(details.deorbit_dt).toUTCString()
+                    "deorbit_dt: ",
+                    details.deorbit_dt
                 )
             );
         }

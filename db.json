@@ -193,14 +193,6 @@
       "deorbit_dt": "2014-08-04T11:44:13Z"
     },
     {
-      "id": "3G",
-      "active": true,
-      "color": "#3FCDAA",
-      "images_collected": 439980,
-      "last_command": "Anything but that",
-      "deorbit_dt": "2018-07-04T12:44:03Z"
-    },
-    {
       "id": "91",
       "active": false,
       "color": "#99B371",
@@ -210,7 +202,7 @@
     },
     {
       "active": false,
-      "color": "#000000",
+      "color": "#0000ff",
       "images_collected": 6,
       "last_command": "first add",
       "deorbit_dt": "2017-05-03T15:50:11Z",

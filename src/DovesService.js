@@ -16,7 +16,7 @@ function getDoves(param) {
     let url = "/doves";
     let filter = param.filter ? param.filter.trim() : null;
     if (filter && filter.length > 0) {
-        url = url+"?"+filter;
+        url = url+"?"+filter.replace(/#/g, "%23");
     }
     $.ajax({
         url: url,
